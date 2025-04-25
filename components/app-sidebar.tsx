@@ -26,7 +26,7 @@ const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "https://api.lovosis.in/uploads/1745510537972-app_icon.png",
   },
   navMain: [
     {

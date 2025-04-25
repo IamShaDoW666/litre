@@ -24,6 +24,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { logoutAction } from "@/actions/auth";
+import { useTransition } from "react";
+import { Loader2 } from "lucide-react";
 
 export function NavUser({
   user,
@@ -35,7 +38,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-
+  const [isPending, startTransition] = useTransition();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -94,9 +97,28 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
-              <IconLogout />
-              Log out
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              disabled={isPending}
+              onClick={async (e) => {
+                e.preventDefault();
+                startTransition(() => {
+                  logoutAction();
+                });
+              }}
+              variant="destructive"
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logging
+                  out...
+                </>
+              ) : (
+                <>
+                  <IconLogout />
+                  Log out
+                </>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
