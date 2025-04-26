@@ -123,6 +123,8 @@ import {
 import { User } from "@prisma/client";
 import { deleteBulkUsers, deleteUser } from "@/actions/user";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
+import Link from "next/link";
 
 function UserRow({ row }: { row: Row<User> }) {
   return (
@@ -151,6 +153,7 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [isPending, startTransition] = React.useTransition();
+  const { user: currentUser } = useAuth();
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
     pageSize: 10,
@@ -188,6 +191,7 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
       cell: ({ row }) => (
         <div className="flex items-center justify-center">
           <Checkbox
+            disabled={row.original.id === currentUser?.id}
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
@@ -201,7 +205,14 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
       accessorKey: "Name",
       header: "Name",
       cell: ({ row }) => {
-        return row.original.name;
+        return (
+          <Link
+            href={`/admin/users/${row.original.id}`}
+            className="cursor-pointer"
+          >
+            {row.original.name}
+          </Link>
+        );
       },
       enableHiding: false,
     },
@@ -240,6 +251,7 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
             <DropdownMenuItem>Favorite</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+              disabled={row.original.id === currentUser?.id}
               onSelect={() => {
                 setDeleteUserId(row.original.id);
                 setDialogOpen(true);
@@ -387,7 +399,7 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant="outline" size="sm">
+          <Button className="text-white" size="sm">
             <IconPlus />
             <span className="hidden lg:inline">Add Section</span>
           </Button>

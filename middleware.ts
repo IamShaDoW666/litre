@@ -21,7 +21,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // 5. Redirect to /dashboard if the user is authenticated
+  // 5. Redirect to /admin if the user is authenticated
   if (
     isPublicRoute &&
     session?.id &&
