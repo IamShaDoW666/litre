@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth-context";
-import { getUser, verifySession } from "@/lib/dal";
+import { getUser } from "@/lib/dal";
 import { User } from "@prisma/client";
 
 export default async function DashboardLayout({

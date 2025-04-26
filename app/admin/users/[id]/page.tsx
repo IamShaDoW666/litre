@@ -1,11 +1,22 @@
 import { SiteHeader } from "@/components/site-header";
+import ProfileFormSkeleton from "@/components/skeletons/profile-form-skeleton";
 import { Separator } from "@/components/ui/separator";
 import UserForm from "@/components/user-form";
 import prisma from "@/lib/prisma";
+import { wait } from "@/lib/utils";
 import { Frown } from "lucide-react";
+import { Suspense } from "react";
 
 async function UserDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  return (
+    <Suspense fallback={<ProfileFormSkeleton />}>
+      <UserDetailForm id={id} />
+    </Suspense>
+  );
+}
+
+async function UserDetailForm({ id }: { id: string }) {
   const user = await prisma.user.findUnique({
     where: { id },
   });
