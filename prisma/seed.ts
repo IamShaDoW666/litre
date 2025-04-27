@@ -5,6 +5,22 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.user.createMany({
+    data: [
+      {
+        name: "Admin",
+        email: "admin@test.com",
+        password: bcrypt.hashSync("secret", 10),
+        phone: faker.phone.number(),
+      },
+      {
+        name: "Test User",
+        email: "test@test.com",
+        password: bcrypt.hashSync("secret", 10),
+        phone: faker.phone.number(),
+      },
+    ],
+  });
   for (let i = 0; i < 55; i++) {
     await prisma.user.create({
       data: {

@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  IconDashboard,
-  IconInnerShadowTop,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconDashboard, IconSettings, IconUsers } from "@tabler/icons-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
@@ -20,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Droplets } from "lucide-react";
 import Link from "next/link";
 
 const data = {
@@ -61,8 +57,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/admin">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Litre</span>
+                <Droplets className="!size-5" />
+                <span className="font-semibold text-xl">Litre.</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

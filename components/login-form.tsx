@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { loginAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,16 +10,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
 import { LoginSchema, loginSchema } from "@/schema/loginSchema";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
-import Link from "next/link";
-import { loginAction } from "@/actions/auth";
-import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 
 export function LoginForm({
   className,
@@ -33,23 +31,18 @@ export function LoginForm({
       password: "",
     },
   });
-  const router = useRouter();
   const onSubmit = async (data: LoginSchema) => {
     console.log(data);
-
     const response = await loginAction(data);
     if (response?.errors) {
       const errorMessage = Object.values(response.errors).flat().join(", ");
-      toast.error(errorMessage, {
-        id: "login-toast",
+      form.setError("email", {
+        type: "manual",
+        message: errorMessage,
       });
-    } else {
-      if (response?.success) {
-        toast.success("Login successful", {
-          id: "login-toast",
-        });
-        router.push("/admin");
-      }
+      // toast.error(errorMessage, {
+      //   id: "login-toast",
+      // });
     }
   };
   return (
@@ -116,7 +109,7 @@ export function LoginForm({
                   <Button
                     disabled={form.formState.isSubmitting}
                     type="submit"
-                    className="w-full"
+                    className="w-full text-white"
                   >
                     {form.formState.isSubmitting ? (
                       <Loader2 className="animate-spin" />

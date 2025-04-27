@@ -1,10 +1,8 @@
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
-import { getUser } from "@/lib/dal";
 
 async function AdminDashboard() {
-  const user = await getUser();
   return (
     <>
       <SiteHeader title="Dashboard" />

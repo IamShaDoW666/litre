@@ -3,7 +3,6 @@ import ProfileFormSkeleton from "@/components/skeletons/profile-form-skeleton";
 import { Separator } from "@/components/ui/separator";
 import UserForm from "@/components/user-form";
 import prisma from "@/lib/prisma";
-import { wait } from "@/lib/utils";
 import { Frown } from "lucide-react";
 import { Suspense } from "react";
 

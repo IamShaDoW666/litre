@@ -67,7 +67,7 @@ function UserForm({ user }: { user: User }) {
                       />
                     </FormControl>
                     <FormDescription>
-                      The user's public display name.
+                      The user&apos;s public display name.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   Dialog,
   DialogClose,
@@ -9,41 +8,54 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import * as React from "react";
 
+import { deleteBulkUsers, deleteUser } from "@/actions/user";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-  DndContext,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type UniqueIdentifier,
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useAuth } from "@/context/auth-context";
+import { type UniqueIdentifier } from "@dnd-kit/core";
 import {
   SortableContext,
-  arrayMove,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { User } from "@prisma/client";
 import {
   IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconCircleCheckFilled,
   IconDotsVertical,
-  IconGripVertical,
   IconLayoutColumns,
   IconLoader,
   IconPlus,
-  IconTrendingUp,
 } from "@tabler/icons-react";
 import {
   ColumnDef,
@@ -60,71 +72,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { toast } from "sonner";
-import { z } from "zod";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { User } from "@prisma/client";
-import { deleteBulkUsers, deleteUser } from "@/actions/user";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/auth-context";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function UserRow({ row }: { row: Row<User> }) {
   return (
@@ -275,7 +225,8 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
         });
         setDialogOpen(false);
         router.refresh();
-      } catch (error) {
+      } catch (e) {
+        console.error(e);
         toast.error("Failed to delete user", { id: "delete-user" });
       }
     });
@@ -291,7 +242,8 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
         });
         setDialogOpen(false);
         router.refresh();
-      } catch (error) {
+      } catch (e) {
+        console.error(e);
         toast.error("Failed to delete user", { id: "delete-user" });
       }
     });
@@ -343,7 +295,7 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
       pagination,
     },
     getRowId: (row) => row.id.toString(),
-    enableRowSelection: true,
+    enableRowSelection: (row) => row.original.id !== currentUser?.id,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -399,7 +351,7 @@ export function UserDataTable({ data: initialData }: { data: User[] }) {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button className="text-white" size="sm">
+          <Button size="sm">
             <IconPlus />
             <span className="hidden lg:inline">Add Section</span>
           </Button>

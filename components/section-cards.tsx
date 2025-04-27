@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getUser } from "@/lib/dal";
 
 export async function SectionCards() {
   return (

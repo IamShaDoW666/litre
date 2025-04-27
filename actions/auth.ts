@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { createSession, deleteSession } from "@/lib/session";
+import { wait } from "@/lib/utils";
 import { loginSchema, LoginSchema } from "@/schema/loginSchema";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
@@ -50,11 +51,7 @@ export async function loginAction(values: LoginSchema) {
     profile: user.profile!,
   });
 
-  // redirect("/admin");
-  return {
-    errors: null,
-    success: true,
-  };
+  redirect("/admin");
 }
 
 export async function logoutAction() {
